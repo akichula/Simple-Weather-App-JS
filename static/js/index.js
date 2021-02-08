@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
     let tempDescription = document.querySelector('.temperature-description');
     let currentDegree = document.querySelector('.degree');
     let locationTimezone = document.querySelector('.location-timezone');
-    let weatherIcon = document.querySelector('.weather-icon');
+    let weatherIcon = document.getElementsByClassName('icon-wrap')
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
@@ -13,7 +13,6 @@ window.addEventListener('load', () => {
 
             const apiID = 'baef9e366f3a1d2554058010c25b1173'
             const api = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${apiID}`;
-
 
             axios.get(api).then(data => {
                 const {temp} = data.data.current;
@@ -25,15 +24,14 @@ window.addEventListener('load', () => {
                 currentDegree.textContent = temp;
                 tempDescription.textContent = event;
                 locationTimezone.textContent = timezone;
-                weatherIcon.textContent = icon
+
+                let currentIcon = new Image(50, 50)
+                currentIcon.src = iconAPI;
+                weatherIcon = currentIcon;
+                document.querySelector('.icon-wrap').appendChild(weatherIcon)
 
             })
 
     })
-    }
-    function setIcons(icon, iconID) {
-        const skycons = new Skycons({color: "white"});
-
-
     }
 })
