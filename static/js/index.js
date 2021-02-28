@@ -1,4 +1,5 @@
 window.addEventListener('load', () => {
+
     let long;
     let lat;
 
@@ -7,11 +8,11 @@ window.addEventListener('load', () => {
     let locationTimezone = document.querySelector('.location-timezone');
     let weatherIcon = document.getElementsByClassName('icon-wrap');
     let tempSection = document.querySelector('.degree-section');
-    let tempSpan = document.querySelector('.degree-span')
+    let tempSpan = document.querySelector('.degree-span');
 
     if (navigator.geolocation) {
         //getting current our location
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition (position => {
             long = position.coords.longitude;
             lat = position.coords.latitude;
 
@@ -22,16 +23,21 @@ window.addEventListener('load', () => {
             //axios instead of fetch to get json data
             axios.get(api).then(data => {
                 const {temp} = data.data.current;
-                const {event} = data.data.alerts[1];
+                const description = data.data.current.weather[0].description;
                 const {timezone} = data.data;
                 const {icon} = data.data.current.weather[0];
                 const iconAPI = `http://openweathermap.org/img/w/${icon}.png`;
-                console.log(data)
+                console.log(data.data)
+
+                function capitalizeFirstLetters(description) {
+                    return description.charAt(0).toUpperCase() + description.slice(1)
+                }
 
                 //redefine our variables
                 currentDegree.textContent = temp.toFixed(0) / 100;
-                tempDescription.textContent = event;
+                tempDescription.textContent = capitalizeFirstLetters(description);
                 locationTimezone.textContent = timezone;
+                document.title = timezone;
 
                 //display image from API via JS
                 let currentIcon = new Image(75, 75)
@@ -39,10 +45,14 @@ window.addEventListener('load', () => {
                 weatherIcon = currentIcon;
                 document.querySelector('.icon-wrap').appendChild(weatherIcon)
 
+                document.querySelector('.loader').style.display = 'none';
+                document.querySelector('.location').style.display = 'flex';
+                document.querySelector('.temperature').style.display = 'flex';
+
                 //change temperature from celsius to fahrenheit
                 function fahrenheitToCelsius(temp) {
-                     temp = (temp - 32) * (5/9);
-                     return temp.toFixed(1)
+                    temp = (temp - 32) * (5 / 9);
+                    return temp.toFixed(1)
                 }
 
                 tempSection.addEventListener('click', () => {
@@ -50,17 +60,22 @@ window.addEventListener('load', () => {
                         tempSpan.textContent = 'C';
                         currentDegree.textContent = fahrenheitToCelsius(temp.toFixed(0) / 100);
 
-                    }
-                    else {
+                    } else {
                         tempSpan.textContent = 'F';
                         currentDegree.textContent = temp.toFixed(0) / 100;
                     }
                 })
             })
-    })
-    }
-    else {
-       let error = document.createElement('h1')
-       error.textContent = "I can't get your Location!"
+        },function (){
+            let location = document.querySelector('.location');
+            let temperature = document.querySelector('.temperature');
+            let hidden = document.querySelector('.hidden');
+
+            location.style.display = 'none';
+            temperature.style.display = 'none';
+            hidden.style.display = 'flex';
+
+        })
     }
 })
+

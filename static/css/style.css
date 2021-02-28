@@ -4,10 +4,18 @@
   box-sizing: border-box;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .temperature, .location {
   height: 30vh;
   width: 40%;
-  display: flex;
+  display: none;
   justify-content: space-evenly;
   align-items: center;
 }
@@ -21,6 +29,34 @@ body {
   background: linear-gradient(#2f96a5, #303e8f);
   font-family: sans-serif;
   color: whitesmoke;
+}
+
+.loader {
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
+}
+.loader p {
+  margin-bottom: 25px;
+}
+
+.loading {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border: 0.25rem solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  animation: spin 1s infinite linear;
+}
+
+.hidden {
+  display: none;
+  z-index: 9999;
+  margin: 0 auto;
+  font-size: 45px;
 }
 
 .temperature {
